@@ -803,13 +803,24 @@ Device::Device()
 		mFaceShapeDeformations[ i ] = 0.0f;
 	}
 	
-	App::get()->getSignalUpdate().connect( bind( &Device::update, this ) );
+	mUpdateConnection = App::get()->getSignalUpdate().connect( bind( &Device::update, this ) );
 }
 
 Device::~Device()
 {
+	disconnectAudioEventHandler();
+	disconnectBodyEventHandler();
+	disconnectBodyIndexEventHandler();
+	disconnectColorEventHandler();
+	disconnectDepthEventHandler();
+	disconnectFace2dEventHandler();
+	disconnectFace3dEventHandler();
+	disconnectInfraredEventHandler();
+	disconnectInfraredLongExposureEventHandler();
+	mUpdateConnection.disconnect();
 	stop();
 	if ( mSensor != nullptr ) {
+		mSensor->Close();
 		mSensor->Release();
 		mSensor = nullptr;
 	}
@@ -1884,6 +1895,10 @@ void Device::start()
 
 void Device::stop()
 {
+	for (auto &process : mProcesses) {
+		process.second.stop();
+	}
+
 	if ( mKinect != KCB_INVALID_HANDLE ) {
 		long hr = KCBCloseSensor( &mKinect );
 		if ( FAILED( hr ) ) {
@@ -1892,17 +1907,13 @@ void Device::stop()
 			mKinect = KCB_INVALID_HANDLE;
 		}
 	}
-
-	for ( size_t i = (size_t)FrameType_Audio; i < (size_t)FrameType_InfraredLongExposure; ++i ) {
-		mProcesses.at( (FrameType)i ).stop();
-	}
 }
 
 void Device::update()
 {
-	for ( size_t i = (size_t)FrameType_Audio; i < (size_t)FrameType_InfraredLongExposure; ++i ) {
-		FrameType frameType	= (FrameType)i;
-		Process& process	= mProcesses.at( frameType );
+	for (auto &p : mProcesses) {
+		FrameType frameType = p.first;
+		Process& process = p.second;
 		switch( frameType ) {
 		case FrameType_Audio:
 			if ( mEventHandlerAudio != nullptr && process.mNewData ) {
