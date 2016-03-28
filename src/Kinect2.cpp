@@ -75,7 +75,7 @@ Channel8uRef channel16To8( const Channel16uRef& channel, uint8_t bytes )
 	return channel8;
 }
 
-Surface8uRef colorizeBodyIndex( const Channel8uRef& bodyIndexChannel )
+Surface8uRef colorizeBodyIndex( const Channel8uRef& bodyIndexChannel, bool maskWhite )
 {
 	Surface8uRef surface;
 	if ( bodyIndexChannel ) {
@@ -85,7 +85,7 @@ Surface8uRef colorizeBodyIndex( const Channel8uRef& bodyIndexChannel )
 		while ( iterChannel.line() && iterSurface.line() ) {
 			while ( iterChannel.pixel() && iterSurface.pixel() ) {
 				size_t index				= (size_t)iterChannel.v();
-				ColorA8u color( getBodyColor( index ), 0xFF );
+				ColorA8u color(maskWhite ? Color8u::white() : getBodyColor(index), 0xFF);
 				if ( index == 0 || index > BODY_COUNT ) {
 					color.a		= 0x00;
 				}
