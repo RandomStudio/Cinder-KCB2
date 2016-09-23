@@ -742,9 +742,19 @@ const vector<Face3d>& Face3dFrame::getFaces() const
 //////////////////////////////////////////////////////////////////////////////////////////////
 
 Device::Process::Process()
-: mNewData( atomic<bool>( false ) ), mRunning( atomic<bool>( false ) ), 
+: mNewData( false ), mRunning( false ), 
 mThreadCallback( nullptr )
 {
+}
+
+Device::Process::Process(const Process &other)
+: mNewData(false), mRunning(false),
+mThreadCallback(nullptr)
+{
+}
+
+Device::Process& Device::Process::operator=(Process other) {
+	return *this;
 }
 
 Device::Process::~Process()

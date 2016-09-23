@@ -404,13 +404,16 @@ protected:
 		Process();
 		~Process();
 
+		Process(const Process &other);
+		Process& operator=(Process other);
+
 		void											start();
 		void											stop();
 	protected:
 		std::function<void ()>							mThreadCallback;
 
-		std::atomic_bool								mNewData;
-		std::atomic_bool								mRunning;
+		std::atomic<bool>								mNewData;
+		std::atomic<bool>								mRunning;
 		std::shared_ptr<std::thread>					mThread;
 
 		friend class									Device;
