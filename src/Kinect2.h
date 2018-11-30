@@ -190,7 +190,7 @@ public:
 		Joint();
 		
 		uint64_t										getId() const;
-		const char*										getJointName() const;
+		std::string										getJointName();
 		const ci::quat&									getOrientation() const;
 		JointType										getParentJoint() const;
 		const ci::vec3&									getPosition() const;

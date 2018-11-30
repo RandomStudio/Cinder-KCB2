@@ -458,7 +458,12 @@ TrackingState Body::Joint::getTrackingState() const
 	return mTrackingState;
 }
 
-const char* Body::Joint::getJointName() const 
+uint64_t Body::Joint::getId() const
+{
+	return mJointType;
+}
+
+std::string Body::Joint::getJointName()  
 {
 
 /*JointType_SpineBase = 0,
