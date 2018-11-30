@@ -1089,6 +1089,7 @@ ivec2 Device::mapCameraToDepth( const vec3& v ) const
 	return ivec2( toVec2( p ) );
 }
 
+
 vector<ivec2> Device::mapCameraToDepth( const vector<vec3>& v ) const
 {
 	vector<ivec2> p;
