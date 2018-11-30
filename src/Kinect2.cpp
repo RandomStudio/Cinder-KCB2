@@ -431,11 +431,11 @@ mTrackingState( TrackingState_NotTracked )
 {
 }
 
-Body::Joint::Joint( const vec3& position, const quat& orientation, TrackingState trackingState,
-	JointType parentJoint )
+Body::Joint::Joint( const vec3& position, const quat& orientation, TrackingState trackingState, JointType jointType, JointType parentJoint )
 : mOrientation( orientation ), mPosition( position ), mParentJoint( parentJoint ), 
 mTrackingState( trackingState )
 {
+	mJointType = jointType;
 }
 
 JointType Body::Joint::getParentJoint() const
@@ -456,6 +456,63 @@ const quat& Body::Joint::getOrientation() const
 TrackingState Body::Joint::getTrackingState() const
 {
 	return mTrackingState;
+}
+
+const char* Body::Joint::getJointName() const 
+{
+
+/*JointType_SpineBase = 0,
+JointType_SpineMid = 1,
+JointType_Neck = 2,
+JointType_Head = 3,
+JointType_ShoulderLeft = 4,
+JointType_ElbowLeft = 5,
+JointType_WristLeft = 6,
+JointType_HandLeft = 7,
+JointType_ShoulderRight = 8,
+JointType_ElbowRight = 9,
+JointType_WristRight = 10,
+JointType_HandRight = 11,
+JointType_HipLeft = 12,
+JointType_KneeLeft = 13,
+JointType_AnkleLeft = 14,
+JointType_FootLeft = 15,
+JointType_HipRight = 16,
+JointType_KneeRight = 17,
+JointType_AnkleRight = 18,
+JointType_FootRight = 19,
+JointType_SpineShoulder = 20,
+JointType_HandTipLeft = 21,
+JointType_ThumbLeft = 22,
+JointType_HandTipRight = 23,
+JointType_ThumbRight = 24,*/
+	switch (mJointType) {
+		case 0: return "SpineBase";
+		case 1: return "SpineMid";
+		case 2: return "Neck";
+		case 3: return "Head";
+		case 4: return "ShoulderLeft";
+		case 5: return "ElbowLeft";
+		case 6: return "WristLeft";
+		case 7: return "HandLeft";
+		case 8: return "ShoulderRight";
+		case 9: return "ElbowRight";
+		case 10: return "WristRight";
+		case 11: return "HandRight";
+		case 12: return "HipLeft";
+		case 13: return "KneeLeft";
+		case 14: return "AnkleLeft";
+		case 15: return "FootLeft";
+		case 16: return "HipRight";
+		case 17: return "KneeRight";
+		case 18: return "AnkleRight";
+		case 19: return "FootRight";
+		case 20: return "SpineShoulder";
+		case 21: return "HandTipLeft";
+		case 22: return "ThumbLeft";
+		case 23: return "HandTipRight";
+		case 24: return "ThumbRight";
+	};
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////
@@ -1344,6 +1401,7 @@ void Device::start()
 													toVec3( joints[ j ].Position ), 
 													toQuat( jointOrientations[ j ].Orientation ), 
 													joints[ j ].TrackingState, 
+													(JointType)j,
 													parentJoint
 													);
 												body.mJointMap.insert( pair<JointType, Body::Joint>( static_cast<JointType>( j ), joint ) );

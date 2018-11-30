@@ -190,15 +190,17 @@ public:
 		Joint();
 		
 		uint64_t										getId() const;
+		const char*										getJointName() const;
 		const ci::quat&									getOrientation() const;
 		JointType										getParentJoint() const;
 		const ci::vec3&									getPosition() const;
 		TrackingState									getTrackingState() const;
 	protected:
 		Joint( const ci::vec3& position, const ci::quat& orientation, 
-			TrackingState trackingState, JointType parentJoint );
+			TrackingState trackingState, JointType jointType, JointType parentJoint );
 		
 		ci::quat										mOrientation;
+		JointType										mJointType;
 		JointType										mParentJoint;
 		ci::vec3										mPosition;
 		TrackingState									mTrackingState;
